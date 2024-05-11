@@ -1,0 +1,67 @@
+[tool.poetry]
+name = "ngfw-edl-server"
+version = "0.1.0.dev"
+description = "External Dynamic List server for Next-Generation Firewalls"
+authors = ["Sam Morris <sam@robots.org.uk>"]
+readme = "README.md"
+classifiers = [
+    "Private :: Do Not Upload",
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.3"
+prometheus-client = "^0.20.0"
+setproctitle = {version = "^1.3.3", optional = true}
+prometheus-flask-exporter = "^0.23.0"
+dnspython = "^2.6.1"
+gunicorn = {version = "^22.0.0", optional = true}
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.10.0"
+python-dotenv = "^1.0.1"
+pylist = "^1.4.0"
+pytest = "^8.2.0"
+pytest-httpserver = "^1.0.10"
+pytest-cov = "^5.0.0"
+pip-audit = "^2.7.3"
+
+# This bit is maintained by hand
+[tool.poetry.extras]
+production = ["gunicorn", "setproctitle"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+strict = true
+packages = "ngfw_edl_server"
+
+[tool.pylint.'MESSAGES CONTROL']
+jobs = 0
+reports = false
+score = false
+py-version = 3.11
+disable= "line-too-long, missing-function-docstring, missing-class-docstring, missing-module-docstring"
+
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+    "--strict-markers",
+    "-m", "not container",
+]
+markers = [
+    "container: include tests in container rest suite"
+]
+testpaths = ["tests"]
+
+[tool.bandit]
+targets = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+
+[tool.pytest.run]
+source_pkgs = ["ngfw_edl_server"]

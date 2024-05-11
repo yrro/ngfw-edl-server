@@ -1,0 +1,2 @@
+FLASK_APP=ngfw_edl_server:create_app
+PYTHONDEVMODE=1
