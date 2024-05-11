@@ -76,19 +76,19 @@ $ poetry install --with=dev
 Run a development web server with debugger and hot code reloading:
 
 ```
-$ poetry run python -m flask run --debug
+$ poetry run flask run --debug
 ```
 
 Run the tests:
 
 ```
-$ poetry run python -m pytest
+$ poetry run pytest
 ```
 
 ... with coverage reports:
 
 ```
-$ poetry run python -m pytest --cov --cov-report=html
+$ poetry run pytest --cov --cov-report=html
 ```
 
 ## Before committing
