@@ -10,7 +10,7 @@ server: Final = Blueprint("server", __name__)
 
 
 @server.route("/server/srv/<target>")
-def srv(target) -> ResponseReturnValue:
+def srv(target: str) -> ResponseReturnValue:
     if comments := request.args.get("comments"):
         comments = bool(int(comments))
 
