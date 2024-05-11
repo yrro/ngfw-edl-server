@@ -1,12 +1,10 @@
-from typing import Final
-
 from flask import Blueprint, make_response, request
 from flask.typing import ResponseReturnValue
 
 from . import dns
 
 
-server: Final = Blueprint("server", __name__)
+server = Blueprint("server", __name__)
 
 
 @server.route("/server/srv/<target>")
