@@ -8,6 +8,5 @@ def query(qname: str) -> Iterable[tuple[str, str]]:
     srv_answer = resolver.resolve(qname, "srv", raise_on_no_answer=True, lifetime=5, search=False)
     for srv_rec in srv_answer:
         host_answers = resolver.resolve_name(srv_rec.target, raise_on_no_answer=True, lifetime=5, search=False)
-        for address in host_answers.addresses():
-            yield address, srv_answer.name.to_text()
+        yield from ((address, srv_rec.target.to_text()) for address in host_answers.addresses())
 
