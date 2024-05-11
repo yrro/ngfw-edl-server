@@ -43,7 +43,7 @@ jobs = 0
 reports = false
 score = false
 py-version = 3.11
-disable= "line-too-long, missing-function-docstring, missing-class-docstring, missing-module-docstring"
+disable= "line-too-long, missing-function-docstring, missing-class-docstring, missing-module-docstring, invalid-name"
 
 
 [tool.pytest.ini_options]

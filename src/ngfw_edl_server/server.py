@@ -11,8 +11,7 @@ server: Final = Blueprint("server", __name__)
 
 @server.route("/server/srv/<target>")
 def srv(target: str) -> ResponseReturnValue:
-    if comments := request.args.get("comments"):
-        comments = bool(int(comments))
+    comments = bool(int(request.args.get("comments", "0")))
 
     content = ""
     for addr, comment in dns.query(target):
