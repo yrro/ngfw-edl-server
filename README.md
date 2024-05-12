@@ -14,17 +14,18 @@ hard coded list of IP addresses and call it a day.
 Fortunately, the directory service makes it trivial for a client to discover
 all of its servers by using [DNS
 SRV](https://datatracker.ietf.org/doc/html/rfc2782) records. At the time of
-writing, that's 28 years ago. So you'd think the Next-Generation Firewall,
-designed as it is to meet the emerging needs of the most demanding Enterprises,
-would be able to populate an address object with such queries, right?
+writing, this record type has existed for 28 years, so you'd think the
+Next-Generation Firewall, designed as it is to meet the emerging needs of the
+most demanding Enterprises, would be able to populate an address object with
+such queries, right?
 
-Of course not, because what minority of enterprsies would need to be able to
-create firewall rules that make it possible for clients to connect to the post
-widely deployed directory service in existance? 🙄
+Well, of course it can't, because what minority of enterprsies would need to be
+able to create firewall rules that make it possible for clients to connect to
+the post widely deployed directory service in existance? 🙄
 
-Fortunately the Next-Generation Firewall has a second feature: external dynamic
-lists. That is, it's able to fetch a list of IP addresses from a web server,
-and rules are able to match on those IP addresses.
+Fortunately the Next-Generation Firewall has a second feature that we can make
+use of: external dynamic lists. That is, it's able to fetch a list of IP
+addresses from a web server, and rules are able to match on those IP addresses.
 
 This project creates such external dynamic lists based on DNS queries for SRV
 records.
@@ -42,19 +43,23 @@ future of 1996 by configuring an External Dynamic List with a URL such as:
     2001:db8:50c:80::/64
     203.0.113.18/27
 
-Flying cars are surely just around the corner!
+Surely, flying cars are just around the corner!
 
 ## How to run
 
 If you're into containers:
 
 ```
-$ podman run --name=ngfw-edl-server --net=host --rm --replace ghcr.io/yrro/ngfw-edl-server --bind=0.0.0.0:8080
+$ podman run --name=ngfw-edl-server --net=host --rm --replace ghcr.io/yrro/ngfw-edl-server
 ```
 
 You can provide any desired [Gunicorn
 settings](https://docs.gunicorn.org/en/latest/settings.html) as additional
 arguments after the image name.
+
+```
+$ podman run --name=ngfw-edl-server --net=host --rm --replace ghcr.io/yrro/ngfw-edl-server --bind=:8443 --certfile=edl.crt --keyfile=edl.key
+```
 
 If you're not into containers, you need [Poetry](https://python-poetry.org/)
 which will take care of creating a venv, installing dependencies, etc.
@@ -62,7 +67,7 @@ which will take care of creating a venv, installing dependencies, etc.
 ```
 $ poetry install --only=main --extras=production
 
-$ poetry run python -I -m gunicorn --bind=0.0.0.0:8080
+$ poetry run python -I -m gunicorn
 ```
 
 ## How to develop
