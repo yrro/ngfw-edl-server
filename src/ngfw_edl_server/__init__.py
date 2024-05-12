@@ -1,32 +1,36 @@
 from importlib import metadata
+import logging
 
-from flask import Flask
-from prometheus_flask_exporter import PrometheusMetrics  # type: ignore [import-untyped]
+from aioprometheus import Gauge, MetricsMiddleware
+from aioprometheus.asgi.quart import metrics
+from quart import Quart
 
-from . import (
-    log_config,
-    server,
-)
+# from prometheus_flask_exporter import PrometheusMetrics  # type: ignore [import-untyped]
+
+from . import server
 
 
-def create_app(host: log_config.Host | None = None) -> Flask:
-    if host is None:
-        host = log_config.Host.detect()
+def create_app() -> Quart:
+    app = Quart(__name__)
 
-    host.configure_logging()
+    app.config.from_object(f"{__name__}.default_settings")
+    app.config.from_prefixed_env()
 
-    app = Flask(__name__)
+    logging.config.dictConfig(app.config["LOGGING_CONFIG"])
 
-    #app.config.from_object(f"{__name__}.default_settings")
-    #app.config.from_prefixed_env()
+    app.register_blueprint(server.blueprint)
 
-    app.register_blueprint(server.server)
+    app.asgi_app = MetricsMiddleware(app.asgi_app)
+    app.add_url_rule("/metrics", "metrics", metrics, methods=["GET"])
 
-    metrics = PrometheusMetrics(app)
-    metrics.info(
+    Gauge(
         f"{__name__}_info",
         "Information about ngfw-edl-server",
-        version=metadata.version("ngfw-edl-server"),
+    ).set(
+        {
+            "version": metadata.version("ngfw-edl-server"),
+        },
+        1,
     )
 
     return app

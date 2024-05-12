@@ -35,7 +35,7 @@ records.
 Drag your Next Generation Firewall kicking and screaming into the incredible
 future of 1996 by configuring an External Dynamic List with a URL such as:
 
-    $ curl http://localhost:8080/edl/srv/_kerberos._udp.example.com
+    $ curl http://localhost:8080/srv/_kerberos._udp.example.com
     2001:db8:20a:80::/64
     192.0.2.18/27
     2001:db8:30b:80::/64
@@ -78,11 +78,14 @@ Install development dependencies:
 $ poetry install --with=dev
 ```
 
-Run a development web server with debugger and hot code reloading:
+Run a development web server with debugging and hot code reloading:
 
 ```
-$ poetry run flask run --debug
+$ poetry run quart run --reload
 ```
+
+For detailed logging set the environment variable
+`NGFW_EDL_SERVER_LOG_LEVEL=DEBUG` (this can be done in the `.quartenv` file).
 
 Run the tests:
 

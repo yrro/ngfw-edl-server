@@ -8,4 +8,8 @@ accesslog = "-"
 
 wsgi_app = "ngfw_edl_server:create_app()"
 
+proc_name = "ngfw_edl_server"
+
+worker_class = "uvicorn.workers.UvicornWorker"
+
 # pylint: skip-file
