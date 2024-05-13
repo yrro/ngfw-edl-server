@@ -5,8 +5,6 @@ from aioprometheus import Gauge, MetricsMiddleware
 from aioprometheus.asgi.quart import metrics
 from quart import Quart
 
-# from prometheus_flask_exporter import PrometheusMetrics  # type: ignore [import-untyped]
-
 from . import server
 
 
