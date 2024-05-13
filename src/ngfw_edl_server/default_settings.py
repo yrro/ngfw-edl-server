@@ -26,7 +26,7 @@ LOGGING_CONFIG = {
         "handlers": ["stderr"],
     },
     "loggers": {
-        "ngfw_edl_server": {
+        __package__: {
             "level": os.environ.get("NGFW_EDL_SERVER_LOG_LEVEL", "WARNING"),
             "propagate": False,
             # If we configure handlers on this logger, or on the root logger,
