@@ -36,12 +36,12 @@ Drag your Next Generation Firewall kicking and screaming into the incredible
 future of 1996 by configuring an External Dynamic List with a URL such as:
 
     $ curl http://localhost:8080/srv/_kerberos._udp.example.com
-    2001:db8:20a:80::/64
-    192.0.2.18/27
-    2001:db8:30b:80::/64
-    198.51.100.18/27
-    2001:db8:50c:80::/64
-    203.0.113.18/27
+    2001:db8:20a:80::1
+    192.0.2.18
+    2001:db8:30b:80::1
+    198.51.100.18
+    2001:db8:50c:80::1
+    203.0.113.18
 
 Surely, flying cars are just around the corner!
 
