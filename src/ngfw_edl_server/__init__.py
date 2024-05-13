@@ -18,6 +18,9 @@ def create_app() -> Quart:
 
     logging.config.dictConfig(app.config["LOGGING_CONFIG"])
 
+    if app.logger.isEnabledFor(logging.DEBUG):
+        maybe_print_logging_config()
+
     app.register_blueprint(server.blueprint)
 
     app.asgi_app = MetricsMiddleware(app.asgi_app)
@@ -34,3 +37,12 @@ def create_app() -> Quart:
     )
 
     return app
+
+
+def maybe_print_logging_config():
+    try:
+        from logging_tree import printout
+    except ImportError:
+        pass
+    else:
+        printout()

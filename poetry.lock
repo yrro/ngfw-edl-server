@@ -586,6 +586,17 @@ docs = ["Sphinx (>=5.0.2)", "doc8 (>=0.11.2)", "sphinx-autobuild", "sphinx-copyb
 testing = ["black", "isort", "pytest (>=6,!=7.0.0)", "pytest-xdist (>=2)", "twine"]
 
 [[package]]
+name = "logging-tree"
+version = "1.10"
+description = "Introspect and display the logger tree inside \"logging\""
+optional = false
+python-versions = "*"
+files = [
+    {file = "logging_tree-1.10-py2.py3-none-any.whl", hash = "sha256:f0e9f4645e6476e48c563ba2b858286079f886b2d5ad8abeaffd38e536a387d8"},
+    {file = "logging_tree-1.10.tar.gz", hash = "sha256:cd78848fe0ee4aafcc64fa8a66f96f177186ff3d883619b1d7f3628564802095"},
+]
+
+[[package]]
 name = "markdown-it-py"
 version = "3.0.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
@@ -1491,4 +1502,4 @@ production = ["gunicorn", "setproctitle", "uvicorn"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "7e542f286ba22cd145f7fc01b1cc9d2ae37b64e3a8edf00309b3a2a05cae7244"
+content-hash = "1540a31c606076b5f5375b0ccd2cf6a24f22f9bc67989f6e3ed8ead8f68c0601"

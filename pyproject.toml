@@ -27,6 +27,7 @@ pytest-httpserver = "^1.0.10"
 pytest-cov = "^5.0.0"
 pip-audit = "^2.7.3"
 pylint = "^3.1.0"
+logging-tree = "^1.10"
 
 [tool.poetry.extras]
 # This bit is maintained by hand
