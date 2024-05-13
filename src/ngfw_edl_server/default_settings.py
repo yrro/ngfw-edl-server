@@ -17,13 +17,13 @@ LOGGING_CONFIG = {
         },
     },
     "handlers": {
-        "standard": {
+        "stderr": {
             "class": "logging.StreamHandler",
             "formatter": "standard",
         },
     },
     "root": {
-        "handlers": ["standard"],
+        "handlers": ["stderr"],
     },
     "loggers": {
         "ngfw_edl_server": {
