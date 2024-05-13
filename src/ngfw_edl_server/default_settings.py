@@ -29,7 +29,9 @@ LOGGING_CONFIG = {
         "ngfw_edl_server": {
             "level": os.environ.get("NGFW_EDL_SERVER_LOG_LEVEL", "WARNING"),
             "propagate": False,
-            # Use the handler configured by Quart
+            # If we configure handlers on this logger, or on the root logger,
+            # Quart will not set a handler on this logger.
+            "handlers": ["stderr"],
         },
     },
 }
