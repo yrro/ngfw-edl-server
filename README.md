@@ -110,4 +110,21 @@ commit anyway with `git commit -n`.
 
 ## Building the container image
 
-...
+The container image is built from Red Hat's [UBI
+Micro](https://www.redhat.com/en/blog/introduction-ubi-micro) image. On the
+host you will need [buildah](https://buildah.io/) and
+[DNF](https://github.com/rpm-software-management/dnf) (which is perfectly safe
+to install on non-Red Hat distros; once [this
+issue](https://github.com/containers/buildah/issues/5483) is resolved, we will
+be able to run `dnf` within the builder container instead, so we won't need it
+installed on the host any more).
+
+```
+$ buildah unshare python3 _build.py
+```
+
+Test the container image with [podman](https://podman.io/):
+
+```
+$ poetry run pytest -m container
+```

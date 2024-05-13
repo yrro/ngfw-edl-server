@@ -3,14 +3,12 @@ name = "ngfw-edl-server"
 version = "0.1.0.dev"
 description = "External Dynamic List server for Next-Generation Firewalls"
 authors = ["Sam Morris <sam@robots.org.uk>"]
-readme = "README.md"
 classifiers = [
     "Private :: Do Not Upload",
 ]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-prometheus-client = "^0.20.0"
 dnspython = "^2.6.1"
 quart = "^0.19.5"
 gunicorn = {version = "^22.0.0", optional = true}
