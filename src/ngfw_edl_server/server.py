@@ -9,13 +9,10 @@ blueprint = Blueprint("server", __name__)
 
 @blueprint.route("/srv/<target>")
 async def srv(target: str) -> ResponseReturnValue:
-    comments = bool(int(request.args.get("comments", "0")))
 
     content = ""
     async for addr, comment in dns.query(target):
-        content += addr
-        if comments:
-            content += "  # " + comment
+        content += addr + "  " + comment
         content += "\r\n"
 
     resp = await make_response(content)
