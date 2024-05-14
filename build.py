@@ -131,6 +131,7 @@ def main(argv):  # pylint: disable=unused-argument
             f"python{PYTHON_SUFFIX}-pip-wheel",
             "libnsl2",
             "libtirpc",
+            "libtasn1",
             "keyutils-libs",
             "krb5-libs",
             "libcom_err",
