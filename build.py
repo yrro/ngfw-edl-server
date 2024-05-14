@@ -160,6 +160,16 @@ def main(argv):  # pylint: disable=unused-argument
             ]
         )
 
+        prpmqa2 = run(
+            ["rpm", f"--root={production_mnt}", "-qa"],
+            text=True,
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        LOGGER.info("Final package list:")
+        for line in sorted(prpmqa2.stdout.split("\n")):
+            LOGGER.info("%s", line)
+
         # <https://github.com/rpm-software-management/rpm/discussions/2735>
         for p in Path(production_mnt / "usr/share/locale").iterdir():
             if p.is_dir():
