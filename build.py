@@ -44,6 +44,8 @@ def main(argv):  # pylint: disable=unused-argument
         NamedTemporaryFile(mode="w", prefix="rpmmacros-") as temp_rpmmacros,
         mount(temp_rpmmacros.name, rpmmacros, ["bind"]),
     ):
+        # There's no option for DNF to tell it to define RPM macros, so we have
+        # to fall back to doing it with a config file.
         temp_rpmmacros.write("%_dbpath %{_var}/lib/rpm\n")
         temp_rpmmacros.flush()
 
@@ -88,16 +90,13 @@ def main(argv):  # pylint: disable=unused-argument
                 symlinks=True,
             )
 
-            # Workaround for DNF "Parsing armored OpenPGP packet(s) failed" error
-            run(
-                [
-                    "rpm",
-                    f"--root={production_mnt}",
-                    "--import",
-                    builder_mnt / "etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release",
-                ],
-                check=True,
-            )
+            # We should be able to tell DNF to import the keys for repo 'foo'
+            # with '--setopt=foo.gpgkey=file://...', however this fails
+            # non-deterministically with the error "Parsing armored OpenPGP
+            # packet(s) failed". The workaround is to manually import all the
+            # keys shipped with the container image.
+            for p in Path(builder_mnt / "etc/pki/rpm-gpg").iterdir():
+                run(["rpm", f"--root={production_mnt}", "--import", p], check=True)
 
             run(
                 [
@@ -108,8 +107,6 @@ def main(argv):  # pylint: disable=unused-argument
                     f"--releasever={RELEASEVER}",
                     "--nodocs",
                     "--setopt=install_weak_deps=0",
-                    f"--setopt=ubi-{RELEASEVER}-baseos-rpms.gpgkey=file://{builder_mnt}/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release",
-                    f"--setopt=ubi-{RELEASEVER}-appstream-rpms.gpgkey=file://{builder_mnt}/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release",
                     "install",
                     f"python{PYTHON_SUFFIX}",
                 ],

@@ -2,3 +2,4 @@
 QUART_APP=ngfw_edl_server:create_app
 QUART_DEBUG=1
 PYTHONDEVMODE=1
+PYTHONSAFEPATH=1

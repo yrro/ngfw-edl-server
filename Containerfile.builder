@@ -2,13 +2,15 @@ FROM registry.access.redhat.com/ubi9/ubi-minimal as builder
 
 ARG PYTHON_SUFFIX
 
+ENV PYTHONSAFEPATH=1
+
+ENV PIP_ROOT_USER_ACTION=ignore
+
 RUN \
   microdnf -y --nodocs --setopt=install_weak_deps=0 install \
     python${PYTHON_SUFFIX} \
     python${PYTHON_SUFFIX}-pip \
   && microdnf -y clean all
-
-ENV PIP_ROOT_USER_ACTION=ignore
 
 RUN python${PYTHON_SUFFIX} -m pip install poetry poetry-plugin-export
 
