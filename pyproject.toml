@@ -40,6 +40,10 @@ build-backend = "poetry.core.masonry.api"
 strict = true
 packages = "ngfw_edl_server"
 
+[[tool.mypy.overrides]]
+module = "logging_tree"
+ignore_missing_imports = true
+
 [tool.pylint.'MESSAGES CONTROL']
 jobs = 0
 reports = false
