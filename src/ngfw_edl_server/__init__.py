@@ -37,7 +37,7 @@ def create_app() -> Quart:
     return app
 
 
-def maybe_print_logging_config():
+def maybe_print_logging_config() -> None:
     try:
         from logging_tree import printout
     except ImportError:
