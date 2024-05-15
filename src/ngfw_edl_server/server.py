@@ -1,4 +1,4 @@
-from quart import Blueprint, make_response, request
+from quart import Blueprint, make_response
 from quart.typing import ResponseReturnValue
 
 from . import dns

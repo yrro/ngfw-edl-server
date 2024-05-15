@@ -15,7 +15,7 @@ RELEASEVER = "9"
 PYTHON_SUFFIX = "3.11"
 
 
-def main(argv):  # pylint: disable=unused-argument
+def main(argv):  # pylint: disable=unused-argument,too-many-locals
 
     run(
         [
@@ -268,9 +268,8 @@ def mount(device, mountpoint, options):
 def run(args, *args_, **kwargs):
     print(f"::group::{args!r}", flush=True)
     try:
-        return subprocess.run(
-            args, *args_, **kwargs
-        )  # nosec pylint: disable=subprocess-run-check
+        # pylint: disable-next=subprocess-run-check
+        return subprocess.run(args, *args_, **kwargs)  # nosec
     finally:
         print("::endgroup::", flush=True)
 

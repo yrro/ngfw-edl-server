@@ -39,7 +39,7 @@ def create_app() -> Quart:
 
 def maybe_print_logging_config() -> None:
     try:
-        from logging_tree import printout
+        from logging_tree import printout  # pylint: disable=import-outside-toplevel
     except ImportError:
         pass
     else:
