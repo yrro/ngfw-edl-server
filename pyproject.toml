@@ -8,7 +8,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 dnspython = "^2.6.1"
 quart = "^0.19.5"
 gunicorn = {version = "^22.0.0", optional = true}
@@ -49,7 +49,7 @@ ignore_missing_imports = true
 jobs = 0
 reports = false
 score = false
-py-version = 3.11
+py-version = 3.12
 disable= "line-too-long, missing-function-docstring, missing-class-docstring, missing-module-docstring, invalid-name"
 
 
