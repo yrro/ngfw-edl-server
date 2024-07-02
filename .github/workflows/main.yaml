@@ -1,0 +1,116 @@
+name: Unit tests, build & publish container image
+
+on:
+
+  pull_request:
+
+  push:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+
+  test-build-push:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+
+    - name: Set up python
+      uses: actions/setup-python@v5
+      with:
+        cache: poetry
+        python-version: '3.12'
+        allow-prereleases: true
+
+    - name: Extract original version identifier
+      id: orig_version
+      run: echo version=$(poetry version --short) >> $GITHUB_OUTPUT
+
+    - name: Construct PEP 440 version identifier
+      id: pep_440
+      run: echo version=$(git describe --match='version-marker' | sed -e s/version-marker-/${{ steps.orig_version.outputs.version }}/ -e s/-g/+git./) >> $GITHUB_OUTPUT
+
+    - name: Bump version number
+      run: poetry version "${{ steps.pep_440.outputs.version }}"
+
+    - name: Update Poetry lock file
+      run: poetry lock --no-update
+
+    - name: Install dependencies
+      run: poetry install --with=dev
+
+    - name: Run unit tests
+      run: poetry run pytest --junit-xml=junit-default.xml
+
+    - name: Install DNF
+      run: sudo apt install dnf
+
+    - name: Fix host RPM configuration to match container
+      run: echo '%_dbpath %{_var}/lib/rpm' > ~/.rpmmacros
+
+    - name: Cache container storage
+      uses: actions/cache@v4
+      with:
+        key: containers-storage
+        path: ~/.local/share/containers/storage
+
+    - name: Build container image
+      run: buildah unshare python build.py
+
+    - name: Run container tests
+      run: poetry run pytest -m container --junit-xml=junit-container.xml
+
+    - name: Summarize test results
+      uses: test-summary/action@v2
+      with:
+        paths: junit-*.xml
+      if: always()
+
+    - name: Create working container
+      run: buildah from --pull=false --name=w localhost/ngfw-edl-server # github's image's buildah is too old to support --pull=never; regardless the use of localhost will also prevent pulling
+
+    - name: Apply additional image annotations
+      run: |
+        buildah config \
+          --annotation=org.opencontainers.image.revision='${{ github.sha }}' \
+          --annotation=org.opencontainers.image.source='${{ github.repositoryUrl }}' \
+          --annotation=org.opencontainers.image.url='${{ github.server_url }}/${{ github.repository }}' \
+          --annotation=org.opencontainers.image.version='${{ steps.pep_440.outputs.version }}' \
+          w
+
+    - name: Commit working container
+      run: buildah commit --rm w ghcr.io/yrro/ngfw-edl-server
+
+    - name: Push image
+      id: push
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        tags: ghcr.io/yrro/ngfw-edl-server:latest
+        username: _ignored_
+        password: ${{ secrets.GITHUB_TOKEN }}
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main' # NOT a security check!
+
+    - name: Prune old images
+      uses: snok/container-retention-policy@v2
+      with:
+        image-names: ngfw-edl-server
+        cut-off: 1 minute ago UTC
+        keep-at-least: 5
+        account-type: personal
+        token: ${{ secrets.GITHUB_TOKEN }}
+        token-type: github-token
+      if: steps.push.outcome == 'success'
