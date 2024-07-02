@@ -10,48 +10,37 @@ RUN \
 
 ENV PYTHONSAFEPATH=1
 
-ENV PIP_ROOT_USER_ACTION=ignore
+ENV \
+  PIP_DISABLE_PIP_VERSION_CHECK=1 \
+  PIP_ROOT_USER_ACTION=ignore
 
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1
-
-RUN python${PYTHON_SUFFIX} -m pip install poetry poetry-plugin-export
+RUN python${PYTHON_SUFFIX} -m pip install build micropipenv[toml]
 
 WORKDIR /opt/app-build
 
-#
-# Create the runtime virtual environment for the app.
+# Build the app's wheel.
 
+RUN python${PYTHON_SUFFIX} -m build -w -v
+
+# Create the runtime virtual environment for the app.
+#
 RUN \
   python${PYTHON_SUFFIX} -m venv \
     --without-pip \
     /opt/app-root/venv
 
+# Cause subsequent pip invocations to install into the runtime virtual
+# environment.
+#
 ENV PIP_PYTHON=/opt/app-root/venv/bin/python
 
-#
-# Install dependencies
+# Install dependencies and the app's built wheel.
 
 RUN \
-  python${PYTHON_SUFFIX} -m poetry \
-    export \
-      -f requirements.txt \
-      -o requirements.txt \
-      --only=main \
-      -E production \
-  && python${PYTHON_SUFFIX} -m pip \
-    install \
-      -r requirements.txt
+  MICROPIPENV_PIP_BIN=pip${PYTHON_SUFFIX} \
+  python${PYTHON_SUFFIX} -m micropipenv \
+    install --deploy
 
-#
-# Build app and install
-
-RUN \
-  python${PYTHON_SUFFIX} -m poetry \
-    build \
-      -f wheel \
-  && python${PYTHON_SUFFIX} -m pip \
-    install \
-      --no-deps \
-      dist/*.whl
+RUN python${PYTHON_SUFFIX} -m pip install --no-deps dist/*.whl
 
 # vim: ts=8 sts=2 sw=2 et

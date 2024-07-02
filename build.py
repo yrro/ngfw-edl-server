@@ -6,32 +6,35 @@ from pathlib import Path
 import shutil
 import subprocess  # nosec
 import sys
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 
 
 LOGGER = getLogger(__name__)
 
+PROJECT = "rsync.net-exporter"
 RELEASEVER = "9"
 PYTHON_SUFFIX = "3.12"
 
 
 def main(argv):  # pylint: disable=unused-argument,too-many-locals
 
-    run(
-        [
-            "buildah",
-            "build",
-            "--pull",
-            "--layers",
-            f"--volume={Path('~/.cache/pip').expanduser()}:/root/.cache/pip:O",
-            f"--volume={Path.cwd()}:/opt/app-build:O",
-            f"--build-arg=PYTHON_SUFFIX={PYTHON_SUFFIX}",
-            "-t",
-            "localhost/ngfw-edl-server-builder",
-            "Containerfile.builder",
-        ],
-        check=True,
-    )
+    with TemporaryDirectory(prefix=f"{PROJECT}-") as temp_dist:
+        run(
+            [
+                "buildah",
+                "build",
+                "--pull",
+                "--layers",
+                f"--volume={Path('~/.cache/pip').expanduser()}:/root/.cache/pip:O",
+                f"--volume={Path.cwd()}:/opt/app-build:O",
+                f"--volume={temp_dist}:/opt/app-build/dist:Z",
+                f"--build-arg=PYTHON_SUFFIX={PYTHON_SUFFIX}",
+                "-t",
+                "localhost/ngfw-edl-server-builder",
+                "Containerfile.builder",
+            ],
+            check=True,
+        )
 
     rpmmacros = Path.home() / ".rpmmacros"
     rpmmacros.touch(mode=0o644, exist_ok=True)
