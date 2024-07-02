@@ -1,4 +1,4 @@
-# fwdnsquery
+# ngfw-edl-server
 
 Let's say you work in an Enterprise with a couple of common properties:
 
