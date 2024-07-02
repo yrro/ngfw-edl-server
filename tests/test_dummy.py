@@ -1,0 +1,3 @@
+# Dummy test to fix CI until we have written some tests
+def test_dummy():
+    ...
