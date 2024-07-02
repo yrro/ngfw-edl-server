@@ -11,7 +11,7 @@ from tempfile import NamedTemporaryFile, TemporaryDirectory
 
 LOGGER = getLogger(__name__)
 
-PROJECT = "rsync.net-exporter"
+PROJECT = "ngfw-edl-server"
 RELEASEVER = "9"
 PYTHON_SUFFIX = "3.12"
 
