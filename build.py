@@ -30,7 +30,7 @@ def main(argv):  # pylint: disable=unused-argument,too-many-locals
                 f"--volume={temp_dist}:/opt/app-build/dist:Z",
                 f"--build-arg=PYTHON_SUFFIX={PYTHON_SUFFIX}",
                 "-t",
-                "localhost/ngfw-edl-server-builder",
+                f"localhost/{PROJECT}-builder",
                 "Containerfile.builder",
             ],
             check=True,
@@ -84,7 +84,7 @@ def main(argv):  # pylint: disable=unused-argument,too-many-locals
             return 1
 
         with (
-            buildah_from(["localhost/ngfw-edl-server-builder"]) as builder_ctr,
+            buildah_from(["localhost/{PROJECT}-builder"]) as builder_ctr,
             buildah_mount(builder_ctr) as builder_mnt,
         ):
             shutil.copytree(
@@ -189,7 +189,7 @@ def main(argv):  # pylint: disable=unused-argument,too-many-locals
             "vendor": "Sam Morris <sam@robots.org.uk>",
             "licenses": None,  # Lots of licenses...
             "ref.name": None,  # I have no idea what this one actually means, but I think it's not intended to be used with images anyway.
-            "title": "ngfw-edl-server",
+            "title": PROJECT,
             "description": "External Dynamic List server for Next-Generation Firewalls",
             "base.digest": base_inspect[
                 "FromImageDigest"
@@ -229,7 +229,7 @@ def main(argv):  # pylint: disable=unused-argument,too-many-locals
                 "buildah",
                 "commit",
                 production_ctr,
-                "localhost/ngfw-edl-server",
+                f"localhost/{PROJECT}",
             ],
             check=True,
         )
