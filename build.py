@@ -68,7 +68,12 @@ def main(argv):  # pylint: disable=unused-argument,too-many-locals
 
         # <https://github.com/rpm-software-management/rpm/discussions/2735>
         prpmqa = run(
-            ["rpm", f"--root={production_mnt}", "-qa"],
+            [
+                "rpm",
+                f"--root={production_mnt}",
+                "-qa",
+                "--queryformat=%{nvra} ${size}\n",
+            ],
             text=True,
             stdout=subprocess.PIPE,
             check=True,
