@@ -89,7 +89,7 @@ def main(argv):  # pylint: disable=unused-argument,too-many-locals
             return 1
 
         with (
-            buildah_from(["localhost/{PROJECT}-builder"]) as builder_ctr,
+            buildah_from([f"localhost/{PROJECT}-builder"]) as builder_ctr,
             buildah_mount(builder_ctr) as builder_mnt,
         ):
             shutil.copytree(
