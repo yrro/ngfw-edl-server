@@ -1691,9 +1691,9 @@ files = [
 h11 = ">=0.9.0,<1"
 
 [extras]
-production = ["gunicorn", "setproctitle", "uvicorn"]
+production = ["gunicorn", "setproctitle", "uvicorn-worker"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "de7f120c4df0b09f5f283160c46d1908b577a237e11e0dfaa5efdd01a8fafe22"
+content-hash = "bed34a828e9e87b1d7caebc3cb9a68dd63cedd35e4722b9997d569586dbff3f0"
