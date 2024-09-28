@@ -10,6 +10,6 @@ wsgi_app = "ngfw_edl_server:create_app()"
 
 proc_name = "ngfw_edl_server"
 
-worker_class = "uvicorn.workers.UvicornWorker"
+worker_class = "uvicorn_worker.UvicornWorker"
 
 # pylint: skip-file
