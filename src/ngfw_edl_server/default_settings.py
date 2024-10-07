@@ -35,3 +35,7 @@ LOGGING_CONFIG = {
         },
     },
 }
+
+# If any nameservers are provided, they override those taken from operating
+# system configuration.
+NAMESERVERS: list[str] = []

@@ -1,10 +1,23 @@
-from quart import Blueprint, make_response
+import logging
+
+from quart import Blueprint, current_app, g, make_response
 from quart.typing import ResponseReturnValue
 
 from . import dns
 
 
 blueprint = Blueprint("server", __name__)
+logger = logging.getLogger(__name__)
+
+
+def get_resolver() -> dns.Resolver:
+    if "resolver" not in g:
+        g.resolver = dns.Resolver()
+        if current_app.config["NAMESERVERS"]:
+            g.resolver.nameservers = current_app.config["NAMESERVERS"]
+        logger.debug("Resolver nameservers: %r", g.resolver.nameservers)
+
+    return g.resolver
 
 
 @blueprint.route("/srv/<target>")
@@ -18,7 +31,7 @@ async def srv(target: str) -> ResponseReturnValue:
     # address list. Hence we do not catch the NXDOMAIN error that would be
     # raised by dns.query.
     content = ""
-    async for addr, comment in dns.query(target):
+    async for addr, comment in dns.query(get_resolver(), target):
         content += addr + "  " + comment
         content += "\r\n"
 

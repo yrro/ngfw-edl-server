@@ -11,9 +11,9 @@ from dns.rdataclass import IN
 logger = logging.getLogger(__name__)
 
 
-async def query(qname: str) -> AsyncGenerator[tuple[str, str], None]:
-    resolver = Resolver()
-
+async def query(
+    resolver: Resolver, qname: str
+) -> AsyncGenerator[tuple[str, str], None]:
     srv_answer = await resolver.resolve(
         qname, SRV, raise_on_no_answer=True, lifetime=5, search=False
     )
