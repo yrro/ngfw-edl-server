@@ -29,7 +29,7 @@ async def srv(target: str) -> ResponseReturnValue:
     try:
         srv_answer = await resolver.resolve(target, "SRV", lifetime=5, search=False)
     except NXDOMAIN:
-        current_app.metric_dns_nxdomain_total.inc(labels=[])
+        current_app.metric_dns_nxdomain_total.inc({"qname": target, "rdtype": "SRV"})
         logger.warning("NXDOMAIN for %r", target)
         return b"", 400
     logger.debug("Response: %r", srv_answer.response.to_text())
@@ -44,7 +44,9 @@ async def srv(target: str) -> ResponseReturnValue:
                 srv_rr.target, lifetime=5, search=False
             )
         except NXDOMAIN:
-            current_app.metric_dns_nxdomain_total.inc(labels=[])
+            current_app.metric_dns_nxdomain_total.inc(
+                {"qname": str(srv_rr.target), "rdtype": "AAAA/A"}
+            )
             logger.warning("NXDOMAIN for %r", srv_rr.target)
             continue
 
