@@ -27,7 +27,7 @@ LOGGING_CONFIG = {
     },
     "loggers": {
         __package__: {
-            "level": os.environ.get("NGFW_EDL_SERVER_LOG_LEVEL", "WARNING"),
+            "level": os.environ.get("NGFW_EDL_SERVER_LOG_LEVEL", "WARNING").upper(),
             "propagate": False,
             # If we configure handlers on this logger, or on the root logger,
             # Quart will not set a handler on this logger.
