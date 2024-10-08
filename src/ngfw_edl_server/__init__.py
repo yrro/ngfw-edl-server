@@ -3,6 +3,7 @@ import logging
 
 from aioprometheus import Gauge, MetricsMiddleware
 from aioprometheus.asgi.quart import metrics
+from aioprometheus.collectors import Registry
 from quart import Quart
 
 from . import server
@@ -21,12 +22,14 @@ def create_app() -> Quart:
 
     app.register_blueprint(server.blueprint)
 
-    app.asgi_app = MetricsMiddleware(app.asgi_app)
+    app.registry = Registry()  # isolate registries of multiple app instances
+    app.asgi_app = MetricsMiddleware(app.asgi_app, registry=app.registry)
     app.add_url_rule("/metrics", "metrics", metrics, methods=["GET"])
 
     Gauge(
         f"{__name__}_info",
         "Information about ngfw-edl-server",
+        registry=app.registry,
     ).set(
         {
             "version": metadata.version("ngfw-edl-server"),
