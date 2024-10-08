@@ -1,7 +1,7 @@
 from importlib import metadata
 import logging
 
-from aioprometheus import Gauge, MetricsMiddleware
+from aioprometheus import Counter, Gauge, MetricsMiddleware
 from aioprometheus.asgi.quart import metrics
 from aioprometheus.collectors import Registry
 from quart import Quart
@@ -24,7 +24,7 @@ def create_app() -> Quart:
 
     app.registry = Registry()  # isolate registries of multiple app instances
     app.asgi_app = MetricsMiddleware(app.asgi_app, registry=app.registry)
-    app.add_url_rule("/metrics", "metrics", metrics, methods=["GET"])
+    app.add_url_rule("/metrics", "metrics", metrics, methods=["GET"])  # exports from app.registry
 
     Gauge(
         f"{__name__}_info",
@@ -35,6 +35,12 @@ def create_app() -> Quart:
             "version": metadata.version("ngfw-edl-server"),
         },
         1,
+    )
+
+    app.metric_dns_nxdomain_total = Counter(
+        f"{__name__}_dns_nxdomain_total",
+        "Total NXDOMAIN reponses from DNS servers",
+        registry=app.registry,
     )
 
     return app
