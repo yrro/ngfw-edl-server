@@ -17,7 +17,6 @@ PYTHON_SUFFIX = "3.12"
 
 
 def main(argv):  # pylint: disable=unused-argument,too-many-locals
-
     with TemporaryDirectory(prefix=f"{PROJECT}-") as temp_dist:
         run(
             [

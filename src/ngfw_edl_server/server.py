@@ -23,7 +23,6 @@ def get_resolver() -> Resolver:
 
 @blueprint.route("/srv/<target>")
 async def srv(target: str) -> ResponseReturnValue:
-
     resolver = get_resolver()
 
     try:
