@@ -45,10 +45,7 @@ jobs:
       run: echo version=$(git describe --match='version-marker' | sed -e s/version-marker-/${{ steps.orig_version.outputs.version }}/ -e s/-g/+git./) >> $GITHUB_OUTPUT
 
     - name: Bump version number
-      run: poetry version "${{ steps.pep_440.outputs.version }}"
-
-    - name: Update Poetry lock file
-      run: poetry lock --no-update
+      run: poetry version "${{ steps.pep_440.outputs.version }}" && poetry lock --no-update
 
     - name: Install dependencies
       run: poetry install --with=dev
