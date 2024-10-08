@@ -24,7 +24,9 @@ def create_app() -> Quart:
 
     app.registry = Registry()  # isolate registries of multiple app instances
     app.asgi_app = MetricsMiddleware(app.asgi_app, registry=app.registry)
-    app.add_url_rule("/metrics", "metrics", metrics, methods=["GET"])  # exports from app.registry
+    app.add_url_rule(
+        "/metrics", "metrics", metrics, methods=["GET"]
+    )  # exports from app.registry
 
     Gauge(
         f"{__name__}_info",
