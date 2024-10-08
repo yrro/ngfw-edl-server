@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 # To set the log level for messages emanating from the web application itself,
 # use the NGFW_EDL_SERVER_LOG_LEVEL environment variable.
@@ -36,6 +37,5 @@ LOGGING_CONFIG = {
     },
 }
 
-# If any nameservers are provided, they override those taken from operating
-# system configuration.
-NAMESERVERS: list[str] = []
+# Any provided properties will be set on the dnspython Resolver.
+DNSPYTHON_RESOLVER_PROPERTIES: dict[str, Any] = {}

@@ -65,6 +65,8 @@ markers = [
     "container: include tests in container rest suite"
 ]
 testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"  # remove once this becomes the new default
 
 [tool.bandit]
 targets = ["src"]
