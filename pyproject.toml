@@ -72,7 +72,7 @@ asyncio_default_fixture_loop_scope = "function"  # remove once this becomes the 
 targets = ["src"]
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 
 [tool.pytest.run]
 source_pkgs = ["ngfw_edl_server"]
