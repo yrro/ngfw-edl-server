@@ -28,6 +28,7 @@ repos:
   - id: poetry-check
 
   - id: poetry-lock
+    entry: poetry lock --no-update
 
 
 - repo: https://github.com/PyCQA/bandit
