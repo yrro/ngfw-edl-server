@@ -34,7 +34,7 @@ async def srv(target: str) -> ResponseReturnValue:
         return b"", 400
     logger.debug("Response: %r", srv_answer.response.to_text())
 
-    data = []
+    data: list[tuple[str, str]] = []
 
     for srv_rr in cast(RRset, srv_answer.rrset):
         logger.debug("ANSWER SRV: %r", srv_rr)
