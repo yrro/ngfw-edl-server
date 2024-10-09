@@ -81,7 +81,7 @@ $ poetry install --with=dev
 Run a development web server with debugging and hot code reloading:
 
 ```
-$ poetry run quart run --reload
+$ poetry run python -I -X dev -m quart run --reload
 ```
 
 For detailed logging set the environment variable
