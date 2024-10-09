@@ -5,6 +5,7 @@ from aioprometheus import Counter, Gauge, MetricsMiddleware
 from aioprometheus.asgi.quart import metrics
 from aioprometheus.collectors import Registry
 from quart import Quart
+from quart.typing import ResponseReturnValue
 
 from . import server
 
@@ -17,8 +18,12 @@ def create_app() -> Quart:
 
     logging.config.dictConfig(app.config["LOGGING_CONFIG"])
 
-    if app.logger.isEnabledFor(logging.DEBUG):
-        maybe_print_logging_config()
+    try:
+        import logging_tree  # pylint: disable=import-outside-toplevel
+    except ImportError:
+        pass
+    else:
+        app.add_url_rule("/logging_config", "loging_config", logging_config)
 
     app.register_blueprint(server.blueprint)
 
@@ -48,10 +53,6 @@ def create_app() -> Quart:
     return app
 
 
-def maybe_print_logging_config() -> None:
-    try:
-        from logging_tree import printout  # pylint: disable=import-outside-toplevel
-    except ImportError:
-        pass
-    else:
-        printout()
+async def logging_config() -> ResponseReturnValue:
+    import logging_tree  # pylint: disable=import-outside-toplevel
+    return logging_tree.format.build_description(), {"Content-Type": "text/plain"}
