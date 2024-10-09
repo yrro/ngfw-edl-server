@@ -207,13 +207,21 @@ def main(argv):  # pylint: disable=unused-argument,too-many-locals
             [
                 "buildah",
                 "config",
-                "--env=PYTHONUNBUFFERED=1",
-                "--env=PYTHONFAULTHANDLER=1",
                 "--port=8080/tcp",
                 "--user=1001:0",
                 "--workingdir=/opt/app-root",
                 "--entrypoint="
-                + json.dumps(["venv/bin/python", "-I", "-m", "gunicorn"]),
+                + json.dumps(
+                    [
+                        "venv/bin/python",
+                        "-I",
+                        "-X",
+                        "faulthandler",
+                        "-u",
+                        "-m",
+                        "gunicorn",
+                    ]
+                ),
                 "--cmd=",
                 "--stop-signal=SIGTERM",
                 "--label=-",
