@@ -67,7 +67,7 @@ which will take care of creating a venv, installing dependencies, etc.
 ```
 $ poetry install --only=main --extras=production
 
-$ poetry run python -I -m gunicorn
+$ poetry run python -I -X faulthandler -u -m gunicorn
 ```
 
 ## How to develop
