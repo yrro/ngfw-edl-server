@@ -13,6 +13,12 @@ repos:
   - id: trailing-whitespace
 
 
+- repo: https://github.com/astral-sh/uv-pre-commit
+  rev: 0.4.21
+  hooks:
+  - id: uv-lock
+
+
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: 'v0.6.9'
   hooks:
@@ -30,16 +36,6 @@ repos:
     - bandit[toml]
 
 
-- repo: https://github.com/python-poetry/poetry
-  rev: 1.8.3
-  hooks:
-
-  - id: poetry-check
-
-  - id: poetry-lock
-    entry: poetry lock --no-update
-
-
 - repo: local
   hooks:
 
@@ -51,16 +47,16 @@ repos:
     #types:
     #- python
 
-  - id: pip-audit
-    name: pip-audit
-    entry: poetry run pip-audit --skip-editable --desc
-    language: system
-    files: ^poetry\.lock$
-    pass_filenames: false
+#  - id: pip-audit
+#    name: pip-audit
+#    entry: poetry run pip-audit --skip-editable --desc
+#    language: system
+#    files: ^poetry\.lock$
+#    pass_filenames: false
 
   - id: pytest
     name: pytest
-    entry: poetry run pytest
+    entry: uv run pytest
     language: system
     pass_filenames: false
     types:
@@ -68,7 +64,7 @@ repos:
 
   - id: pylint
     name: pylint
-    entry: poetry run pylint
+    entry: uv run pylint
     language: system
     types:
     - python
