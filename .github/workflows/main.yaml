@@ -1,4 +1,4 @@
-name: Unit tests, build & publish container image
+name: Unit tests, build, test & publish container image
 
 on:
 
@@ -17,58 +17,55 @@ jobs:
 
     steps:
 
+    - name: Record build timestamp
+      id: timestamp
+      run: echo timestamp=$(date --rfc-3339=sec) >> $GITHUB_OUTPUT
+
     - name: Checkout
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: latest
 
     - name: Set up python
       uses: actions/setup-python@v5
       with:
-        cache: poetry
         python-version: '3.12'
-        allow-prereleases: true
-
-    - name: Extract original version identifier
-      id: orig_version
-      run: echo version=$(poetry version --short) >> $GITHUB_OUTPUT
 
     - name: Construct PEP 440 version identifier
       id: pep_440
-      run: echo version=$(git describe --match='version-marker' | sed -e s/version-marker-/${{ steps.orig_version.outputs.version }}/ -e s/-g/+git./) >> $GITHUB_OUTPUT
+      run: echo version=$(uvx dunamai from git) >> $GITHUB_OUTPUT
 
-    - name: Bump version number
-      run: poetry version "${{ steps.pep_440.outputs.version }}" && poetry lock --no-update
+    - name: Update project version identifier
+      run: uvx --from=toml-cli toml set --toml-path=pyproject.toml project.version "${{ steps.pep_440.outputs.version }}"
 
     - name: Install dependencies
-      run: poetry install --with=dev
+      run: uv sync
 
     - name: Run unit tests
-      run: poetry run pytest --junit-xml=junit-default.xml
-
-    - name: Update package lists
-      run: sudo apt-get update
-
-    - name: Install DNF
-      run: sudo apt-get install dnf
-
-    - name: Fix host RPM configuration to match container
-      run: echo '%_dbpath %{_var}/lib/rpm' > ~/.rpmmacros
-
-    - name: Cache container storage
-      uses: actions/cache@v4
-      with:
-        key: containers-storage
-        path: ~/.local/share/containers/storage
+      run: uv run pytest --junit-xml=junit-default.xml
 
     - name: Build container image
-      run: buildah unshare python build.py
+      uses: redhat-actions/buildah-build@v2
+      with:
+        containerfiles: Containerfile
+        build-args: ''
+        tags: localhost/ngfw-edl-server:latest
+        labels: |
+          org.opencontainers.image.authors=Sam Morris <sam@robots.org.uk>
+          org.opencontainers.image.url=${{ github.server_url }}/${{ github.repository }}
+          org.opencontainers.image.source=${{ github.repositoryUrl }}
+          org.opencontainers.image.title=Next Generation Firewall Extended Dynamic List server
+          org.opencontainers.image.created=${{ steps.timestamp.outputs.timestamp }}
+          org.opencontainers.image.version=${{ steps.pep_440.outputs.version }}
+          org.opencontainers.image.revision=${{ github.sha }}
 
     - name: Run container tests
-      run: poetry run pytest -m container --junit-xml=junit-container.xml
+      run: uv run pytest -m container --junit-xml=junit-container.xml
 
     - name: Summarize test results
       uses: test-summary/action@v2
@@ -76,26 +73,14 @@ jobs:
         paths: junit-*.xml
       if: always()
 
-    - name: Create working container
-      run: buildah from --pull=false --name=w localhost/ngfw-edl-server # github's image's buildah is too old to support --pull=never; regardless the use of localhost will also prevent pulling
+    - name: Tag container image
+      run: buildah tag localhost/ngfw-edl-server:latest quay.io/ngfw-edl-server:latest
 
-    - name: Apply additional image annotations
-      run: |
-        buildah config \
-          --annotation=org.opencontainers.image.revision='${{ github.sha }}' \
-          --annotation=org.opencontainers.image.source='${{ github.repositoryUrl }}' \
-          --annotation=org.opencontainers.image.url='${{ github.server_url }}/${{ github.repository }}' \
-          --annotation=org.opencontainers.image.version='${{ steps.pep_440.outputs.version }}' \
-          w
-
-    - name: Commit working container
-      run: buildah commit --rm w quay.io/yrro/ngfw-edl-server
-
-    - name: Push image
+    - name: Push container image
       id: push
       uses: redhat-actions/push-to-registry@v2
       with:
         tags: quay.io/yrro/ngfw-edl-server:latest
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_PASSWORD }}
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main' # NOT a security check!
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'

@@ -61,13 +61,13 @@ arguments after the image name.
 $ podman run --name=ngfw-edl-server --net=host --rm --replace quay.io/yrro/ngfw-edl-server --bind=:8443 --certfile=edl.crt --keyfile=edl.key
 ```
 
-If you're not into containers, you need [Poetry](https://python-poetry.org/)
+If you're not into containers, you need [uv](https://docs.astral.sh/uv/)
 which will take care of creating a venv, installing dependencies, etc.
 
 ```
-$ poetry install --only=main --extras=production
+$ uv sync --no-dev --extra=production
 
-$ poetry run python -I -X faulthandler -u -m gunicorn
+$ uv run python -I -X faulthandler -u -m gunicorn
 ```
 
 ## How to develop
@@ -75,13 +75,13 @@ $ poetry run python -I -X faulthandler -u -m gunicorn
 Install development dependencies:
 
 ```
-$ poetry install --with=dev
+$ uv sync
 ```
 
 Run a development web server with debugging and hot code reloading:
 
 ```
-$ poetry run python -I -X dev -m quart run --reload
+$ uv run python -I -X dev -m quart run --reload
 ```
 
 For detailed logging set the environment variable
@@ -90,14 +90,28 @@ For detailed logging set the environment variable
 Run the tests:
 
 ```
-$ poetry run pytest
+$ uv run pytest
 ```
 
 ... with coverage reports:
 
 ```
-$ poetry run pytest --cov --cov-report=html
+$ uv run pytest --cov --cov-report=html
 ```
+
+Audit dependencies for vulnerabilities:
+
+```
+$ uvx pip-audit -r <(uv export --all-extras --no-dev --no-emit-project)
+```
+
+Check PyPI for newer modules:
+
+```
+$ uv lock -U --dry-run
+```
+
+... remove `--dry-run` to actually update the lockfile. Then `uv sync`.
 
 ## Before committing
 
@@ -120,11 +134,11 @@ be able to run `dnf` within the builder container instead, so we won't need it
 installed on the host any more).
 
 ```
-$ buildah unshare python3 -I build.py
+$ buildah build -t ngfw-edl-server
 ```
 
 Test the container image with [podman](https://podman.io/):
 
 ```
-$ poetry run pytest -m container
+$ uv run pytest -m container
 ```
