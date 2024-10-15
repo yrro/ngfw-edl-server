@@ -1,4 +1,4 @@
-from importlib import metadata
+from importlib import metadata, util
 import logging
 
 from aioprometheus import Counter, Gauge, MetricsMiddleware
@@ -18,11 +18,7 @@ def create_app() -> Quart:
 
     logging.config.dictConfig(app.config["LOGGING_CONFIG"])
 
-    try:
-        import logging_tree  # pylint: disable=import-outside-toplevel
-    except ImportError:
-        pass
-    else:
+    if util.find_spec("logging_tree"):
         app.add_url_rule("/logging_config", "loging_config", logging_config)
 
     app.register_blueprint(server.blueprint)
@@ -55,4 +51,5 @@ def create_app() -> Quart:
 
 async def logging_config() -> ResponseReturnValue:
     import logging_tree  # pylint: disable=import-outside-toplevel
+
     return logging_tree.format.build_description(), {"Content-Type": "text/plain"}
