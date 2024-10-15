@@ -19,9 +19,7 @@ uvicorn-worker = {version = "^0.2.0", optional = true}
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.0"
 python-dotenv = "^1.0.1"
-pylist = "^1.4.0"
 pytest = "^8.2.0"
-pytest-httpserver = "^1.0.10"
 pytest-cov = "^5.0.0"
 pip-audit = "^2.7.3"
 pylint = "^3.1.0"

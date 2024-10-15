@@ -1276,16 +1276,6 @@ spelling = ["pyenchant (>=3.2,<4.0)"]
 testutils = ["gitpython (>3)"]
 
 [[package]]
-name = "pylist"
-version = "1.4.0"
-description = "A simple printer of pylist lists"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pylist-1.4.0.tar.gz", hash = "sha256:e088b728361eede4749a322453d1366725431ca2e528e9bcd870b715289e23b1"},
-]
-
-[[package]]
 name = "pyparsing"
 version = "3.1.4"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -1354,20 +1344,6 @@ pytest = ">=4.6"
 
 [package.extras]
 testing = ["fields", "hunter", "process-tests", "pytest-xdist", "virtualenv"]
-
-[[package]]
-name = "pytest-httpserver"
-version = "1.1.0"
-description = "pytest-httpserver is a httpserver for pytest"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pytest_httpserver-1.1.0-py3-none-any.whl", hash = "sha256:7ef88be8ed3354b6784daa3daa75a422370327c634053cefb124903fa8d73a41"},
-    {file = "pytest_httpserver-1.1.0.tar.gz", hash = "sha256:6b1cb0199e2ed551b1b94d43f096863bbf6ae5bcd7c75c2c06845e5ce2dc8701"},
-]
-
-[package.dependencies]
-Werkzeug = ">=2.0.0"
 
 [[package]]
 name = "python-dotenv"
@@ -1726,4 +1702,4 @@ production = ["gunicorn", "setproctitle", "uvicorn-worker"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "474706b9c824035b28c8c8270d758fe45c9c59300d57b6f622540014931aa31e"
+content-hash = "a271f82c15e17bc7b2b847f2b3626f5baa20e977a92743b7c358c026983164af"
