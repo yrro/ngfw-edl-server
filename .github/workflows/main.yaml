@@ -12,10 +12,8 @@ defaults:
 
 jobs:
 
-  test-build-push:
-
+  main:
     runs-on: ubuntu-latest
-
     permissions:
       packages: write
 
