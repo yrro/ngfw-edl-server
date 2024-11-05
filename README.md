@@ -50,7 +50,7 @@ Surely, flying cars are just around the corner!
 If you're into containers:
 
 ```
-$ podman run --name=ngfw-edl-server --net=host --rm --replace ghcr.io/yrro/ngfw-edl-server
+$ podman run --name=ngfw-edl-server --net=host --rm --replace quay.io/yrro/ngfw-edl-server
 ```
 
 You can provide any desired [Gunicorn
@@ -58,7 +58,7 @@ settings](https://docs.gunicorn.org/en/latest/settings.html) as additional
 arguments after the image name.
 
 ```
-$ podman run --name=ngfw-edl-server --net=host --rm --replace ghcr.io/yrro/ngfw-edl-server --bind=:8443 --certfile=edl.crt --keyfile=edl.key
+$ podman run --name=ngfw-edl-server --net=host --rm --replace quay.io/yrro/ngfw-edl-server --bind=:8443 --certfile=edl.crt --keyfile=edl.key
 ```
 
 If you're not into containers, you need [Poetry](https://python-poetry.org/)
