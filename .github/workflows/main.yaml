@@ -74,7 +74,7 @@ jobs:
       if: always()
 
     - name: Tag container image
-      run: buildah tag localhost/ngfw-edl-server:latest quay.io/ngfw-edl-server:latest
+      run: buildah tag localhost/ngfw-edl-server:latest quay.io/yrro/ngfw-edl-server:latest
 
     - name: Push container image
       id: push
