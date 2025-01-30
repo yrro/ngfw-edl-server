@@ -66,6 +66,7 @@ RUN rpm --root=/mnt --erase --allmatches --nodeps --noscripts --notriggers -vh \
   libattr \
   libcap \
   libcom_err \
+  libffi \
   libgcc \
   libsigsegv \
   libnsl2 \
