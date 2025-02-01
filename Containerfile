@@ -21,6 +21,8 @@ RUN dnf --installroot=/mnt --releasever=${RELEASEVER} -y --setopt=install_weak_d
 
 RUN dnf --installroot=/mnt --releasever=${RELEASEVER} -y --setopt=install_weak_deps=0 --nodocs install python${PYTHON_VERSION}
 
+RUN dnf --installroot=/mnt --releasever=${RELEASEVER} -y clean all
+
 
 # -- Install dependencies & app
 FROM build0 AS build1
