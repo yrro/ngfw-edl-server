@@ -1,9 +1,9 @@
 # Thanks to turing85 for the inspiration for how to use ubi-micro within a Containerfile!
 # <https://gist.github.com/turing85/7c450dd048fcf2ed94fed8ad5cdc5d9f>
 
-ARG RELEASEVER=9
+ARG RELEASEVER=10
 
-ARG PYTHON_VERSION=3.12
+ARG PYTHON_VERSION=3
 
 
 # --- Extract ubi-micro at /mnt and install python
@@ -52,42 +52,36 @@ ARG PYTHON_VERSION
 
 RUN rpm --root=/mnt --erase --allmatches --nodeps --noscripts --notriggers -vh \
   alternatives \
+  audit-libs \
   bash \
   bzip2-libs \
   ca-certificates \
   coreutils-single \
   expat \
-  gawk \
+  findutils \
   gdbm-libs \
   glibc-minimal-langpack \
-  gmp \
   grep \
-  keyutils-libs \
-  krb5-libs \
   libacl \
   libattr \
   libcap \
-  libcom_err \
+  libcap-ng \
+  libeconf \
   libffi \
   libgcc \
-  libsigsegv \
-  libnsl2 \
   libtasn1 \
   libselinux \
   libsepol \
-  libtirpc \
   libuuid \
-  libverto \
   libxcrypt \
   openssl-fips-provider \
   openssl-fips-provider-so \
   mpdecimal \
-  mpfr \
   ncurses-base \
   ncurses-libs \
+  pam-libs \
   p11-kit \
   p11-kit-trust \
-  pcre \
   pcre2 \
   pcre2-syntax \
   python${PYTHON_VERSION}-pip-wheel \
