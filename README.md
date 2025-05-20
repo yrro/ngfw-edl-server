@@ -111,7 +111,15 @@ Check PyPI for newer modules:
 $ uv lock -U --dry-run
 ```
 
-... remove `--dry-run` to actually update the lockfile. Then `uv sync`.
+or, with nicer output:
+
+```
+$ uv pip list --exclude-editable --outdated
+```
+
+To actually update the lockfile, remove `--dry-run` and then to sync the
+packages within the environment to the new lockfile, run `uv sync`. The two
+steps can be done in one go with `uv sync -U`.
 
 ## Before committing
 
