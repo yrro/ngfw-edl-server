@@ -42,7 +42,7 @@ disable= "line-too-long, missing-function-docstring, missing-class-docstring, mi
 
 [tool.uv]
 dev-dependencies = [
-    "dnslib3>=0.10.0",
+    "dnslib>=0.9.0",
     "logging-tree>=1.10",
     "pytest>=8.3.3",
     "pytest-asyncio>=0.24.0",
