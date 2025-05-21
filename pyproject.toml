@@ -61,7 +61,7 @@ addopts = [
     "-m", "not container",
 ]
 markers = [
-    "container: include tests in container rest suite"
+    "container: include tests in container test suite"
 ]
 testpaths = ["tests"]
 asyncio_mode = "auto"
