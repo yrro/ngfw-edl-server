@@ -16,11 +16,12 @@ logger = logging.getLogger(__name__)
 @pytest.fixture()
 def session(ca):
     retries = urllib3.util.Retry(total=6, backoff_factor=0.1)
-    sess = requests.Session()
-    sess.mount("https://", requests.adapters.HTTPAdapter(max_retries=retries))
-    with ca.cert_pem.tempfile() as ca_cert:
-        sess.verify = ca_cert
-        yield sess
+    with requests.Session() as sess:
+        sess.mount("https://", requests.adapters.HTTPAdapter(max_retries=retries))
+        sess.headers.update({"Connection": "close"})
+        with ca.cert_pem.tempfile() as ca_cert:
+            sess.verify = ca_cert
+            yield sess
 
 
 @pytest.fixture(scope="session")
