@@ -90,11 +90,11 @@ def container(ca, tmpdir_factory):
                 stderr=subprocess.STDOUT,
                 text=True,
             )
-            logger.info("----- BEGIN CONTAINER INSPECT -----")
+            logger.debug("----- BEGIN CONTAINER INSPECT -----")
             for line in p4.stdout.split("\n"):
                 if line:
-                    logger.info("%s", line)
-            logger.info("----- END CONTAINER INSPECT -----")
+                    logger.debug("%s", line)
+            logger.debug("----- END CONTAINER INSPECT -----")
 
     finally:
         subprocess.run(["podman", "rm", "-f", ctr], check=True)
