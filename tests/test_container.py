@@ -69,6 +69,8 @@ def container(ca, tmpdir_factory):
             addr = (host, int(port_))
             yield addr
         finally:
+            subprocess.run(["podman", "stop", ctr], check=True)
+
             p3 = subprocess.run(
                 ["podman", "logs", ctr],
                 stdout=subprocess.PIPE,
@@ -94,9 +96,7 @@ def container(ca, tmpdir_factory):
             logger.info("----- END CONTAINER INSPECT -----")
 
     finally:
-        subprocess.run(
-            ["podman", "rm", "-f", ctr], stdout=subprocess.DEVNULL, check=True
-        )
+        subprocess.run(["podman", "rm", "-f", ctr], check=True)
 
 
 def test_metrics(container, session):
